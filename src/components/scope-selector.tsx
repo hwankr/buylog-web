@@ -5,6 +5,7 @@ import { serializeScope, type BuylogScope } from "@/lib/scope";
 type ScopeSelectorProps = {
   scopes: BuylogScope[];
   selectedScope: BuylogScope;
+  hrefForScope?: (scope: BuylogScope) => string;
 };
 
 function isSelected(scope: BuylogScope, selectedScope: BuylogScope) {
@@ -20,7 +21,11 @@ function labelFor(scope: BuylogScope) {
   return `${scope.label ?? "그룹"} ${scope.role ?? "member"}`;
 }
 
-export function ScopeSelector({ scopes, selectedScope }: ScopeSelectorProps) {
+export function ScopeSelector({
+  scopes,
+  selectedScope,
+  hrefForScope,
+}: ScopeSelectorProps) {
   return (
     <nav
       aria-label="데이터 스코프"
@@ -37,7 +42,7 @@ export function ScopeSelector({ scopes, selectedScope }: ScopeSelectorProps) {
                 ? "bg-slate-900 text-white"
                 : "text-slate-600 hover:bg-slate-100 hover:text-slate-950",
             ].join(" ")}
-            href={`/?scope=${encodeURIComponent(serializeScope(scope))}`}
+            href={hrefForScope?.(scope) ?? `/?scope=${encodeURIComponent(serializeScope(scope))}`}
             key={serializeScope(scope)}
           >
             {labelFor(scope)}
