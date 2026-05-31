@@ -17,7 +17,7 @@ This plan covers one destructive demo-prep subsystem:
 - Export current app-domain data before deletion.
 - Delete and replace current app-domain rows in `public`.
 - Create realistic personal data plus realistic group data.
-- Register product images through Supabase Storage and save public URLs in `product_items.image_url`.
+- Register product images through the existing Supabase Storage `product-images` bucket and save public URLs in `product_items.image_url`.
 - Extend the web item list/detail read path so the registered images are visible during the demo.
 - Verify dashboard, reports, items, and group scopes after the seed.
 
@@ -79,11 +79,11 @@ Do not auto-enable RLS in this demo-data plan. Enabling RLS without policies can
 - Create `scripts/demo-data/catalog.test.mjs`
   - Tests that the catalog has personal/group coverage, six-month purchase coverage, image coverage, and near-term replacement events.
 - Create `scripts/demo-data/export-current-data.mjs`
-  - Exports current app-domain rows to `artifacts/demo-data-backups/2026-05-31T19-30-00-000Z.json` style timestamped files.
+  - Exports current app-domain rows to `artifacts/demo-data-backups/2026-05-31T19-30-00-000Z.json` style timestamped files. It prefers `SUPABASE_SERVICE_ROLE_KEY` and falls back to publishable-key-visible rows for demo operations.
 - Create `scripts/demo-data/seed-demo-data.mjs`
-  - Deletes app-domain rows in FK-safe order, creates a Storage bucket, uploads generated SVG item images, and inserts the replacement data.
+  - Deletes app-domain rows in FK-safe order, reuses the existing `product-images` Storage bucket, uploads generated SVG item images under `items/demo-products/`, and inserts the replacement data.
 - Create `scripts/demo-data/verify-demo-data.mjs`
-  - Checks row counts, group scopes, image URLs, six-month purchase span, and key reporting/item RPCs.
+  - Checks row counts, group scopes, image URLs, six-month purchase span, and key reporting/item RPCs. It can run with either service role or publishable key.
 - Create one new Supabase migration through `supabase migration new include_item_images_in_item_rpcs`
   - Extends item list/detail RPCs to return `image_url`.
 - Modify `src/lib/items/items.ts`
@@ -312,7 +312,7 @@ export function buildDemoCatalog(anchorDate = new Date()) {
     return {
       ...item,
       groupKey: group?.key ?? null,
-      imagePath: `demo-products/${item.slug}.svg`,
+      imagePath: `items/demo-products/${item.slug}.svg`,
       imageSvg: productSvg(item, category),
       purchases: item.history.map((monthOffset, index) => ({
         purchaseDate: monthDate(anchorDate, monthOffset, item.dayOfMonth),
@@ -513,7 +513,7 @@ import fs from "node:fs";
 import { DEMO_USER_ID, buildDemoCatalog } from "./catalog.mjs";
 
 const CONFIRM_TOKEN = "replace-demo-data";
-const BUCKET = "buylog-demo-images";
+const BUCKET = "product-images";
 const DELETE_ORDER = [
   "product_inventory_snapshots",
   "inventory_observation_items",
@@ -588,31 +588,14 @@ for (const table of DELETE_ORDER) {
   }
 }
 
-const { error: bucketError } = await supabase.storage.createBucket(BUCKET, {
-  public: true,
-  allowedMimeTypes: ["image/svg+xml"],
-  fileSizeLimit: "1MB",
-});
-if (bucketError && !bucketError.message.includes("already exists")) {
-  throw new Error(`create bucket: ${bucketError.message}`);
-}
-if (bucketError?.message.includes("already exists")) {
-  const { error: updateBucketError } = await supabase.storage.updateBucket(BUCKET, {
-    public: true,
-    allowedMimeTypes: ["image/svg+xml"],
-    fileSizeLimit: "1MB",
-  });
-  requireOk(updateBucketError, "update bucket");
-}
-
-const { data: existingObjects, error: listObjectsError } = await supabase.storage.from(BUCKET).list("demo-products", {
+const { data: existingObjects, error: listObjectsError } = await supabase.storage.from(BUCKET).list("items/demo-products", {
   limit: 1000,
 });
 requireOk(listObjectsError, "list old demo images");
 if ((existingObjects ?? []).length > 0) {
   const { error: removeObjectsError } = await supabase.storage
     .from(BUCKET)
-    .remove(existingObjects.map((object) => `demo-products/${object.name}`));
+    .remove(existingObjects.map((object) => `items/demo-products/${object.name}`));
   requireOk(removeObjectsError, "remove old demo images");
 }
 

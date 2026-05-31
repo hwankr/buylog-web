@@ -25,7 +25,7 @@ function loadEnv() {
 
   return {
     url: env.NEXT_PUBLIC_SUPABASE_URL,
-    key: env.SUPABASE_SERVICE_ROLE_KEY,
+    key: env.SUPABASE_SERVICE_ROLE_KEY || env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
   };
 }
 
@@ -43,7 +43,9 @@ async function countRows(supabase, table) {
 
 const { url, key } = loadEnv();
 if (!url || !key) {
-  fail("NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required");
+  fail(
+    "NEXT_PUBLIC_SUPABASE_URL and either SUPABASE_SERVICE_ROLE_KEY or NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY are required",
+  );
 }
 
 const supabase = createClient(url, key, {

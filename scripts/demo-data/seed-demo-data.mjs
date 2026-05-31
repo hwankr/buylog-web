@@ -4,7 +4,7 @@ import fs from "node:fs";
 import { DEMO_USER_ID, buildDemoCatalog } from "./catalog.mjs";
 
 const CONFIRM_TOKEN = "replace-demo-data";
-const BUCKET = "buylog-demo-images";
+const BUCKET = "product-images";
 const DELETE_ORDER = [
   "product_inventory_snapshots",
   "inventory_observation_items",
@@ -100,37 +100,17 @@ for (const table of DELETE_ORDER) {
   }
 }
 
-const { error: bucketError } = await supabase.storage.createBucket(BUCKET, {
-  public: true,
-  allowedMimeTypes: ["image/svg+xml"],
-  fileSizeLimit: "1MB",
-});
-
-if (bucketError && !bucketError.message.includes("already exists")) {
-  throw new Error(`create bucket: ${bucketError.message}`);
-}
-
-if (bucketError?.message.includes("already exists")) {
-  const { error: updateBucketError } = await supabase.storage.updateBucket(
-    BUCKET,
-    {
-      public: true,
-      allowedMimeTypes: ["image/svg+xml"],
-      fileSizeLimit: "1MB",
-    },
-  );
-  requireOk(updateBucketError, "update bucket");
-}
-
 const { data: existingObjects, error: listObjectsError } = await supabase.storage
   .from(BUCKET)
-  .list("demo-products", { limit: 1000 });
+  .list("items/demo-products", { limit: 1000 });
 requireOk(listObjectsError, "list old demo images");
 
 if ((existingObjects ?? []).length > 0) {
   const { error: removeObjectsError } = await supabase.storage
     .from(BUCKET)
-    .remove(existingObjects.map((object) => `demo-products/${object.name}`));
+    .remove(
+      existingObjects.map((object) => `items/demo-products/${object.name}`),
+    );
   requireOk(removeObjectsError, "remove old demo images");
 }
 

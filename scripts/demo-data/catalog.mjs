@@ -518,7 +518,7 @@ export function buildDemoCatalog(anchorDate = new Date()) {
     return {
       ...item,
       groupKey: group?.key ?? null,
-      imagePath: `demo-products/${item.slug}.svg`,
+      imagePath: `items/demo-products/${item.slug}.svg`,
       imageSvg: productSvg(item, category),
       purchases: item.history.map((monthOffset, index) => ({
         purchaseDate: monthDate(anchorDate, monthOffset, item.dayOfMonth),

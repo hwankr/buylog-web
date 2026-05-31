@@ -40,14 +40,15 @@ function loadEnv() {
 
   return {
     url: env.NEXT_PUBLIC_SUPABASE_URL,
-    key: env.SUPABASE_SERVICE_ROLE_KEY,
+    key: env.SUPABASE_SERVICE_ROLE_KEY || env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+    mode: env.SUPABASE_SERVICE_ROLE_KEY ? "service-role" : "publishable-visible",
   };
 }
 
-const { url, key } = loadEnv();
+const { url, key, mode } = loadEnv();
 if (!url || !key) {
   throw new Error(
-    "NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required in .env.local",
+    "NEXT_PUBLIC_SUPABASE_URL and either SUPABASE_SERVICE_ROLE_KEY or NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY are required in .env.local",
   );
 }
 
@@ -72,6 +73,6 @@ const outputPath = path.join(dir, `${timestamp}.json`);
 
 fs.writeFileSync(
   outputPath,
-  JSON.stringify({ exportedAt: new Date().toISOString(), tables: backup }, null, 2),
+  JSON.stringify({ exportedAt: new Date().toISOString(), mode, tables: backup }, null, 2),
 );
 console.log(outputPath);
