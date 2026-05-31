@@ -8,6 +8,7 @@ import {
   RecentPurchaseTable,
   ReplacementDueList,
 } from "@/components/dashboard/lists";
+import { DashboardSummaryBand } from "@/components/dashboard/summary-band";
 import { ScopeSelector } from "@/components/scope-selector";
 import { PageHeader } from "@/components/ui/page-header";
 import { formatKoreanDate } from "@/lib/format";
@@ -61,6 +62,11 @@ export default async function DashboardPage({ searchParams }: PageProps) {
               selectedScope={viewModel.selectedScope}
             />
           }
+        />
+
+        <DashboardSummaryBand
+          kpis={viewModel.dashboard.kpis}
+          scopeLabel={viewModel.selectedScope.label ?? "개인 물품"}
         />
 
         <KpiGrid kpis={viewModel.dashboard.kpis} />

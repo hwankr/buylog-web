@@ -1,6 +1,15 @@
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 
 import { EmptyState } from "@/components/empty-state";
+import {
+  TableShell,
+  tableBodyClassName,
+  tableCellClassName,
+  tableClassName,
+  tableHeadClassName,
+  tableHeaderCellClassName,
+  tableNumberCellClassName,
+} from "@/components/ui/data-table";
 import { Panel } from "@/components/ui/panel";
 import { formatKoreanDate, formatKrw } from "@/lib/format";
 import type {
@@ -30,35 +39,37 @@ export function RecentPurchaseTable({ rows }: { rows: RecentPurchase[] }) {
 
   return (
     <Section title="최근 구매 이력">
-      <div className="overflow-x-auto">
-        <table className="min-w-full text-left text-sm">
-          <thead className="border-b border-hairline text-xs uppercase text-muted">
+      <TableShell label="최근 구매 이력">
+        <table className={tableClassName}>
+          <thead className={tableHeadClassName}>
             <tr>
-              <th className="py-2 pr-4 font-medium">날짜</th>
-              <th className="py-2 pr-4 font-medium">품목</th>
-              <th className="py-2 pr-4 font-medium">매장</th>
-              <th className="py-2 pr-4 text-right font-medium">금액</th>
+              <th className={tableHeaderCellClassName}>날짜</th>
+              <th className={tableHeaderCellClassName}>물품</th>
+              <th className={tableHeaderCellClassName}>매장</th>
+              <th className={`${tableHeaderCellClassName} text-right`}>금액</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-hairline-soft">
+          <tbody className={tableBodyClassName}>
             {rows.map((row) => (
-              <tr key={row.purchaseId}>
-                <td className="whitespace-nowrap py-3 pr-4 text-body">
+              <tr className="active:bg-surface-soft" key={row.purchaseId}>
+                <td className={`${tableCellClassName} whitespace-nowrap`}>
                   {formatKoreanDate(row.purchaseDate)}
                 </td>
-                <td className="py-3 pr-4">
+                <td className={tableCellClassName}>
                   <p className="font-medium text-ink">{row.itemName}</p>
-                  <p className="text-xs text-muted">{row.brand || row.category}</p>
+                  <p className="text-xs text-muted">
+                    {row.brand || row.category}
+                  </p>
                 </td>
-                <td className="py-3 pr-4 text-body">{row.storeName || "-"}</td>
-                <td className="py-3 pr-4 text-right font-medium text-ink">
+                <td className={tableCellClassName}>{row.storeName || "-"}</td>
+                <td className={tableNumberCellClassName}>
                   {formatKrw(row.price)}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-      </div>
+      </TableShell>
     </Section>
   );
 }
@@ -66,17 +77,20 @@ export function RecentPurchaseTable({ rows }: { rows: RecentPurchase[] }) {
 export function ReplacementDueList({ items }: { items: ReplacementDueItem[] }) {
   if (items.length === 0) {
     return (
-      <Section title="교체 임박 품목">
-        <EmptyState message="교체 임박 품목이 없습니다." />
+      <Section title="교체 임박 물품">
+        <EmptyState message="교체 임박 물품이 없습니다." />
       </Section>
     );
   }
 
   return (
-    <Section title="교체 임박 품목">
+    <Section title="교체 임박 물품">
       <ul className="divide-y divide-hairline-soft">
         {items.map((item) => (
-          <li className="flex items-center justify-between gap-4 py-3" key={item.itemId}>
+          <li
+            className="flex items-center justify-between gap-4 py-3"
+            key={item.itemId}
+          >
             <div className="min-w-0">
               <p className="truncate font-medium text-ink">{item.itemName}</p>
               <p className="text-sm text-muted">
@@ -89,7 +103,9 @@ export function ReplacementDueList({ items }: { items: ReplacementDueItem[] }) {
               </p>
             </div>
             <div className="text-right">
-              <p className="font-medium text-ink">{item.daysUntilReplacement}일</p>
+              <p className="font-medium text-ink">
+                {item.daysUntilReplacement}일
+              </p>
               <p className="text-sm text-muted">{formatKrw(item.expectedPrice)}</p>
             </div>
           </li>
@@ -103,7 +119,7 @@ export function PriceMovementList({ movements }: { movements: PriceMovement[] })
   if (movements.length === 0) {
     return (
       <Section title="가격 변동">
-        <EmptyState message="가격 변동이 감지된 품목이 없습니다." />
+        <EmptyState message="가격 변동이 감지된 물품이 없습니다." />
       </Section>
     );
   }
@@ -115,9 +131,14 @@ export function PriceMovementList({ movements }: { movements: PriceMovement[] })
           const increased = movement.deltaAmount > 0;
           const Icon = increased ? ArrowUpRight : ArrowDownRight;
           return (
-            <li className="flex items-center justify-between gap-4 py-3" key={movement.itemId}>
+            <li
+              className="flex items-center justify-between gap-4 py-3"
+              key={movement.itemId}
+            >
               <div className="min-w-0">
-                <p className="truncate font-medium text-ink">{movement.itemName}</p>
+                <p className="truncate font-medium text-ink">
+                  {movement.itemName}
+                </p>
                 <p className="text-sm text-muted">
                   {movement.previousStore || "-"} → {movement.currentStore || "-"}
                 </p>
@@ -128,7 +149,8 @@ export function PriceMovementList({ movements }: { movements: PriceMovement[] })
                   {formatKrw(Math.abs(movement.deltaAmount))}
                 </p>
                 <p className="text-right text-sm">
-                  {formatKrw(movement.previousPrice)} → {formatKrw(movement.currentPrice)}
+                  {formatKrw(movement.previousPrice)} →{" "}
+                  {formatKrw(movement.currentPrice)}
                 </p>
               </div>
             </li>
