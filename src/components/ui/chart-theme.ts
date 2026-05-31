@@ -10,3 +10,4 @@ export const CHART_COLORS = [
 export const CHART_GRID_COLOR = "#e6dfd8";
 export const CHART_TEXT_COLOR = "#6c6a64";
 export const CHART_BAR_RADIUS: [number, number, number, number] = [6, 6, 0, 0];
+export const CHART_INITIAL_DIMENSION = { width: 320, height: 288 };

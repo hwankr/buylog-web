@@ -18,6 +18,7 @@ import {
   CHART_BAR_RADIUS,
   CHART_COLORS,
   CHART_GRID_COLOR,
+  CHART_INITIAL_DIMENSION,
   CHART_TEXT_COLOR,
 } from "@/components/ui/chart-theme";
 import { Panel } from "@/components/ui/panel";
@@ -61,7 +62,11 @@ export function ReportsSpendingTrendChart({
 
   return (
     <ChartShell title="월간/주간 지출 추이">
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer
+        height="100%"
+        initialDimension={CHART_INITIAL_DIMENSION}
+        width="100%"
+      >
         <BarChart data={data} margin={{ left: 0, right: 8, top: 8, bottom: 0 }}>
           <CartesianGrid stroke={CHART_GRID_COLOR} vertical={false} />
           <XAxis
@@ -101,7 +106,11 @@ export function ReportsCategoryShareChart({ data }: { data: CategoryShare[] }) {
   return (
     <ChartShell title="카테고리별 지출 비중">
       <div className="grid h-full gap-4 md:grid-cols-[minmax(0,1fr)_220px]">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer
+          height="100%"
+          initialDimension={CHART_INITIAL_DIMENSION}
+          width="100%"
+        >
           <PieChart>
             <Pie
               data={data}

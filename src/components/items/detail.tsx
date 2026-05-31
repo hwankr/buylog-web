@@ -15,6 +15,7 @@ import { EmptyState } from "@/components/empty-state";
 import {
   CHART_COLORS,
   CHART_GRID_COLOR,
+  CHART_INITIAL_DIMENSION,
   CHART_TEXT_COLOR,
 } from "@/components/ui/chart-theme";
 import {
@@ -67,7 +68,12 @@ function PriceTrendChart({ history }: { history: ItemPurchaseHistoryRow[] }) {
 
   return (
     <div className="h-64">
-      <ResponsiveContainer height="100%" minHeight={1} width="100%">
+      <ResponsiveContainer
+        height="100%"
+        initialDimension={CHART_INITIAL_DIMENSION}
+        minHeight={1}
+        width="100%"
+      >
         <LineChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
           <CartesianGrid stroke={CHART_GRID_COLOR} vertical={false} />
           <XAxis
