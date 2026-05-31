@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 
 const themedFiles = [
   "src/components/app-shell.tsx",
+  "src/components/app-nav.tsx",
   "src/components/scope-selector.tsx",
   "src/components/empty-state.tsx",
   "src/components/dashboard/kpi-grid.tsx",
