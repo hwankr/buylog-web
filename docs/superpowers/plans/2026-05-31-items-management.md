@@ -25,7 +25,7 @@ This plan covers one subsystem: read-only Items management. It does not add item
 
 - Create `docs/architecture/item-permissions.md`
   - Records the read-only permission model and mutation gate for future edit/delete work.
-- Create `supabase/migrations/20260531120000_add_item_management_rpcs.sql`
+- Create `supabase/migrations/20260531074636_add_item_management_rpcs.sql`
   - Adds scoped item list/detail/history RPCs using existing `private.current_buylog_user_id()` and group membership checks.
 - Create `src/lib/items/items.ts`
   - Owns item DTO types, query-param parsing, href builders, and row mappers.
@@ -129,11 +129,11 @@ Expected: one docs commit.
 ## Task 2: Supabase Item Management RPCs
 
 **Files:**
-- Create: `supabase/migrations/20260531120000_add_item_management_rpcs.sql`
+- Create: `supabase/migrations/20260531074636_add_item_management_rpcs.sql`
 
 - [ ] **Step 1: Write the migration**
 
-Create `supabase/migrations/20260531120000_add_item_management_rpcs.sql` with this exact SQL:
+Create `supabase/migrations/20260531074636_add_item_management_rpcs.sql` with this exact SQL:
 
 ```sql
 begin;
@@ -550,7 +550,7 @@ Expected: either the linked migration list prints, or the shell reports the Supa
 Run:
 
 ```powershell
-git add supabase/migrations/20260531120000_add_item_management_rpcs.sql
+git add supabase/migrations/20260531074636_add_item_management_rpcs.sql
 git commit -m "feat: add item management read rpcs"
 ```
 
@@ -2575,7 +2575,7 @@ Run from the repo root after Supabase CLI authentication/linking is available:
 supabase db push
 ```
 
-Expected: migration `20260531120000_add_item_management_rpcs.sql` is applied to the linked Supabase project. If the CLI asks for confirmation, confirm only the new item management migration.
+Expected: migration `20260531074636_add_item_management_rpcs.sql` is applied to the linked Supabase project. If the CLI asks for confirmation, confirm only the new item management migration.
 
 - [ ] **Step 2: Verify RPC presence in SQL editor or psql**
 
