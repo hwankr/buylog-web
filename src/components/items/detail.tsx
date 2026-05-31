@@ -17,7 +17,18 @@ import {
   CHART_GRID_COLOR,
   CHART_TEXT_COLOR,
 } from "@/components/ui/chart-theme";
+import {
+  TableShell,
+  tableBodyClassName,
+  tableCellClassName,
+  tableClassName,
+  tableHeadClassName,
+  tableHeaderCellClassName,
+  tableNumberCellClassName,
+} from "@/components/ui/data-table";
+import { MetricCard } from "@/components/ui/metric-card";
 import { Panel } from "@/components/ui/panel";
+import { StatusPill } from "@/components/ui/status-pill";
 import { formatKoreanDate, formatKrw } from "@/lib/format";
 import type {
   ItemDetail,
@@ -40,20 +51,18 @@ function daysText(value: number | null) {
 }
 
 function trendData(history: ItemPurchaseHistoryRow[]) {
-  return [...history]
-    .reverse()
-    .map((row) => ({
-      date: row.purchaseDate,
-      label: formatKoreanDate(row.purchaseDate),
-      price: row.price,
-    }));
+  return [...history].reverse().map((row) => ({
+    date: row.purchaseDate,
+    label: formatKoreanDate(row.purchaseDate),
+    price: row.price,
+  }));
 }
 
 function PriceTrendChart({ history }: { history: ItemPurchaseHistoryRow[] }) {
   const data = trendData(history);
 
   if (data.length === 0) {
-    return <EmptyState message="가격 변화 데이터가 없습니다." />;
+    return <EmptyState message="가격 변동 데이터가 없습니다." />;
   }
 
   return (
@@ -96,37 +105,35 @@ function PurchaseHistoryTable({
   }
 
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full text-left text-sm">
-        <thead className="border-b border-hairline text-xs uppercase text-muted">
+    <TableShell label="구매 이력">
+      <table className={tableClassName}>
+        <thead className={tableHeadClassName}>
           <tr>
-            <th className="py-2 pr-4 font-medium">날짜</th>
-            <th className="py-2 pr-4 font-medium">매장</th>
-            <th className="py-2 pr-4 text-right font-medium">수량</th>
-            <th className="py-2 pr-4 text-right font-medium">가격</th>
-            <th className="py-2 pr-4 text-right font-medium">변화</th>
+            <th className={tableHeaderCellClassName}>날짜</th>
+            <th className={tableHeaderCellClassName}>매장</th>
+            <th className={`${tableHeaderCellClassName} text-right`}>수량</th>
+            <th className={`${tableHeaderCellClassName} text-right`}>가격</th>
+            <th className={`${tableHeaderCellClassName} text-right`}>변동</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-hairline-soft">
+        <tbody className={tableBodyClassName}>
           {history.map((row) => {
             const increased = (row.priceDelta ?? 0) > 0;
             const decreased = (row.priceDelta ?? 0) < 0;
             const Icon = increased ? ArrowUpRight : ArrowDownRight;
             return (
-              <tr key={row.purchaseId}>
-                <td className="whitespace-nowrap py-3 pr-4 text-body">
+              <tr className="active:bg-surface-soft" key={row.purchaseId}>
+                <td className={`${tableCellClassName} whitespace-nowrap`}>
                   {formatKoreanDate(row.purchaseDate)}
                 </td>
-                <td className="py-3 pr-4 text-body">{row.storeName}</td>
-                <td className="py-3 pr-4 text-right text-body">
-                  {row.quantity}
-                </td>
-                <td className="py-3 pr-4 text-right font-medium text-ink">
+                <td className={tableCellClassName}>{row.storeName}</td>
+                <td className={tableNumberCellClassName}>{row.quantity}</td>
+                <td className={tableNumberCellClassName}>
                   {formatKrw(row.price)}
                 </td>
                 <td
                   className={[
-                    "py-3 pr-4 text-right font-medium",
+                    tableNumberCellClassName,
                     increased ? "text-error" : "",
                     decreased ? "text-success" : "",
                     !increased && !decreased ? "text-muted" : "",
@@ -144,7 +151,7 @@ function PurchaseHistoryTable({
           })}
         </tbody>
       </table>
-    </div>
+    </TableShell>
   );
 }
 
@@ -158,50 +165,65 @@ export function ItemDetailPanel({
   return (
     <div className="space-y-5">
       <div className="grid gap-4 lg:grid-cols-4">
-        <Panel description={item.groupLabel} title="소속">
-          <p className="text-2xl font-medium text-ink">{item.category}</p>
-        </Panel>
-        <Panel description="전체 구매 횟수" title="구매">
-          <p className="text-2xl font-medium text-ink">{item.purchaseCount}건</p>
-        </Panel>
-        <Panel description="누적 지출" title="금액">
-          <p className="text-2xl font-medium text-ink">
-            {formatKrw(item.totalSpent)}
-          </p>
-        </Panel>
-        <Panel
-          description={item.expectedRepurchaseDate ?? "예상 없음"}
+        <MetricCard
+          accent="amber"
+          eyebrow={item.groupLabel}
+          title="소속"
+          value={item.category}
+        />
+        <MetricCard
+          accent="teal"
+          helper="전체 구매 횟수"
+          title="구매"
+          value={`${item.purchaseCount}건`}
+        />
+        <MetricCard
+          accent="coral"
+          helper="누적 지출"
+          title="금액"
+          tone="dark"
+          value={formatKrw(item.totalSpent)}
+        />
+        <MetricCard
+          accent="dark"
+          helper={item.expectedRepurchaseDate ?? "예상 없음"}
           title="재구매 예상"
-        >
-          <p className="text-2xl font-medium text-ink">
-            {daysText(item.daysUntilRepurchase)}
-          </p>
-        </Panel>
+          value={daysText(item.daysUntilRepurchase)}
+        />
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_360px]">
-        <Panel title="가격 변화">
+        <Panel title="가격 변동">
           <PriceTrendChart history={history} />
         </Panel>
-        <Panel title="가격 요약">
+        <Panel
+          accent="teal"
+          title="가격 요약"
+          titleAdornment={<StatusPill tone="dark">최근 구매 기준</StatusPill>}
+          tone="dark"
+        >
           <dl className="space-y-3 text-sm">
             <div className="flex justify-between gap-3">
-              <dt className="text-muted">평균가</dt>
-              <dd className="font-medium text-ink">
+              <dt className="text-on-dark-soft">평균가</dt>
+              <dd className="font-medium text-on-dark">
                 {formatKrw(item.averagePrice)}
               </dd>
             </div>
             <div className="flex justify-between gap-3">
-              <dt className="text-muted">최저가</dt>
-              <dd className="font-medium text-ink">{formatKrw(item.minPrice)}</dd>
+              <dt className="text-on-dark-soft">최저가</dt>
+              <dd className="font-medium text-on-dark">
+                {formatKrw(item.minPrice)}
+              </dd>
             </div>
             <div className="flex justify-between gap-3">
-              <dt className="text-muted">최고가</dt>
-              <dd className="font-medium text-ink">{formatKrw(item.maxPrice)}</dd>
+              <dt className="text-on-dark-soft">최고가</dt>
+              <dd className="font-medium text-on-dark">
+                {formatKrw(item.maxPrice)}
+              </dd>
             </div>
             <div className="flex justify-between gap-3">
-              <dt className="text-muted">최근 구매처</dt>
-              <dd className="font-medium text-ink">{item.lastStoreName}</dd>
+              <dt className="text-on-dark-soft">최근 구매처</dt>
+              <dd className="font-medium text-on-dark">{item.lastStoreName}</dd>
             </div>
           </dl>
         </Panel>
