@@ -89,9 +89,11 @@ describe("rich design primitives", () => {
       </TableShell>,
     );
 
-    expect(
-      screen.getByRole("region", { name: "Recent purchases" }),
-    ).toHaveClass("rounded-lg", "border-hairline");
+    const tableRegion = screen.getByRole("region", {
+      name: "Recent purchases",
+    });
+    expect(tableRegion).toHaveClass("rounded-lg", "border-hairline");
+    expect(tableRegion.firstElementChild).toHaveClass("overflow-x-auto", "px-4");
     expect(screen.getByText("On track")).toHaveClass(
       "bg-success/15",
       "text-ink",

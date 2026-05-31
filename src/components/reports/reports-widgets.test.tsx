@@ -134,6 +134,15 @@ describe("reports widgets", () => {
     expect(screen.getByText("물품별 누적 지출")).toBeInTheDocument();
     expect(screen.getByText("휴지")).toBeInTheDocument();
     expect(screen.getByText("₩12,900")).toBeInTheDocument();
+    const itemSpendingTableRegion = screen
+      .getAllByRole("region", { name: "물품별 누적 지출" })
+      .find((region) => region.className.includes("bg-canvas"));
+    if (!itemSpendingTableRegion) {
+      throw new Error("물품별 누적 지출 table region was not rendered.");
+    }
+    expect(
+      itemSpendingTableRegion.firstElementChild,
+    ).toHaveClass("overflow-x-auto", "px-4");
     expect(screen.getByText("매장별 구매액")).toBeInTheDocument();
     expect(screen.getByText("쿠팡")).toBeInTheDocument();
     expect(screen.getByText("₩8,000")).toBeInTheDocument();

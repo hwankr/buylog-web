@@ -29,7 +29,7 @@ export function TableShell({
       )}
       role="region"
     >
-      <div className="overflow-x-auto">{children}</div>
+      <div className="overflow-x-auto px-4">{children}</div>
     </div>
   );
 }

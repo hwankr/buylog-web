@@ -110,6 +110,15 @@ describe("items widgets", () => {
     expect(screen.getByText("위생용품")).toHaveClass("bg-accent-amber/20");
     expect(screen.getByText("내 물품")).toHaveClass("bg-surface-soft");
     expect(screen.getByText("₩22,000")).toBeInTheDocument();
+    const itemsTableRegion = screen
+      .getAllByRole("region", { name: "물품 목록" })
+      .find((region) => region.className.includes("bg-canvas"));
+    if (!itemsTableRegion) {
+      throw new Error("물품 목록 table region was not rendered.");
+    }
+    expect(
+      itemsTableRegion.firstElementChild,
+    ).toHaveClass("overflow-x-auto", "px-4");
     expect(screen.getByText("2026. 5. 20.")).toBeInTheDocument();
     expect(screen.getByText("2026. 6. 19.")).toBeInTheDocument();
   });
