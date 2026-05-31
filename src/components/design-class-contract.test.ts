@@ -10,6 +10,9 @@ const themedFiles = [
   "src/components/dashboard/kpi-grid.tsx",
   "src/components/dashboard/charts.tsx",
   "src/components/dashboard/lists.tsx",
+  "src/components/reports/filter-bar.tsx",
+  "src/components/reports/charts.tsx",
+  "src/components/reports/tables.tsx",
 ];
 
 describe("design class contract", () => {
