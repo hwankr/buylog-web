@@ -1,4 +1,5 @@
 import { RotateCcw, Search } from "lucide-react";
+import Link from "next/link";
 
 import { buttonClassName } from "@/components/ui/button";
 import { Panel } from "@/components/ui/panel";
@@ -123,10 +124,10 @@ export function ItemsFilterBar({ filterOptions, params }: ItemsFilterBarProps) {
             <button className={buttonClassName("primary")} type="submit">
               적용
             </button>
-            <a className={buttonClassName("secondary")} href="/items">
+            <Link className={buttonClassName("secondary")} href="/items">
               <RotateCcw aria-hidden="true" className="size-4" />
               초기화
-            </a>
+            </Link>
           </div>
         </div>
 
