@@ -21,6 +21,7 @@ import {
   CHART_TEXT_COLOR,
 } from "@/components/ui/chart-theme";
 import { Panel } from "@/components/ui/panel";
+import { StatusPill } from "@/components/ui/status-pill";
 import { formatKrw } from "@/lib/format";
 import type {
   CategoryShare,
@@ -35,7 +36,11 @@ function ChartShell({
   children: React.ReactNode;
 }) {
   return (
-    <Panel title={title}>
+    <Panel
+      accent="teal"
+      title={title}
+      titleAdornment={<StatusPill tone="teal">필터 반영</StatusPill>}
+    >
       <div className="h-72">{children}</div>
     </Panel>
   );
@@ -73,7 +78,11 @@ export function ReportsSpendingTrendChart({
             tick={{ fill: CHART_TEXT_COLOR }}
           />
           <Tooltip formatter={(value) => formatKrw(Number(value))} />
-          <Bar dataKey="totalAmount" fill={CHART_COLORS[0]} radius={CHART_BAR_RADIUS} />
+          <Bar
+            dataKey="totalAmount"
+            fill={CHART_COLORS[0]}
+            radius={CHART_BAR_RADIUS}
+          />
         </BarChart>
       </ResponsiveContainer>
     </ChartShell>
@@ -121,7 +130,9 @@ export function ReportsCategoryShareChart({ data }: { data: CategoryShare[] }) {
               <span className="flex min-w-0 items-center gap-2 text-body">
                 <span
                   className="size-2 rounded-full"
-                  style={{ backgroundColor: CHART_COLORS[index % CHART_COLORS.length] }}
+                  style={{
+                    backgroundColor: CHART_COLORS[index % CHART_COLORS.length],
+                  }}
                 />
                 <span className="truncate">{entry.category}</span>
               </span>
