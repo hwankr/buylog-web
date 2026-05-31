@@ -1,4 +1,11 @@
-import { ArrowDownRight, ArrowUpRight, CalendarClock, ReceiptText, Tags, Wallet } from "lucide-react";
+import {
+  ArrowDownRight,
+  ArrowUpRight,
+  CalendarClock,
+  ReceiptText,
+  Tags,
+  Wallet,
+} from "lucide-react";
 
 import { formatKrw } from "@/lib/format";
 import type { DashboardKpis } from "@/lib/reporting/dashboard";
@@ -21,14 +28,14 @@ export function KpiGrid({ kpis }: KpiGridProps) {
     );
   const ratioText =
     kpis.deltaRatio === null
-      ? "전월 지출 없음"
+      ? "지난달 지출 없음"
       : `${(kpis.deltaRatio * 100).toFixed(1)}%`;
 
   const cards = [
     {
       label: "이번 달 구매액",
       value: formatKrw(kpis.monthTotal),
-      helper: `전월 대비 ${formatSignedCurrency(kpis.deltaAmount)}`,
+      helper: `지난달 대비 ${formatSignedCurrency(kpis.deltaAmount)}`,
       icon: Wallet,
     },
     {
@@ -57,19 +64,21 @@ export function KpiGrid({ kpis }: KpiGridProps) {
         const Icon = card.icon;
         return (
           <article
-            className="rounded-md border border-slate-200 bg-white p-4 shadow-sm"
+            className="rounded-lg border border-hairline bg-surface-card p-6"
             key={card.label}
           >
             <div className="flex items-start justify-between gap-3">
               <div className="space-y-1">
-                <p className="text-sm font-medium text-slate-500">{card.label}</p>
-                <p className="text-2xl font-semibold text-slate-950">{card.value}</p>
+                <p className="text-sm font-medium text-muted">{card.label}</p>
+                <p className="font-display text-4xl leading-tight text-ink">
+                  {card.value}
+                </p>
               </div>
-              <div className="rounded-md border border-slate-200 bg-slate-50 p-2 text-slate-600">
+              <div className="rounded-md border border-hairline bg-canvas p-2 text-primary">
                 <Icon className="size-4" aria-hidden="true" />
               </div>
             </div>
-            <p className="mt-3 flex items-center gap-1 text-sm text-slate-500">
+            <p className="mt-4 flex items-center gap-1 text-sm text-muted">
               {card.label === "이번 달 구매액" ? directionIcon : null}
               {card.helper}
             </p>

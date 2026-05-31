@@ -30,9 +30,11 @@ describe("dashboard widgets", () => {
       />,
     );
 
+    const firstCard = screen.getByText("이번 달 구매액").closest("article");
+    expect(firstCard).toHaveClass("bg-surface-card", "border-hairline", "rounded-lg");
     expect(screen.getByText("이번 달 구매액")).toBeInTheDocument();
     expect(screen.getByText("₩128,900")).toBeInTheDocument();
-    expect(screen.getByText("전월 대비 +₩28,900")).toBeInTheDocument();
+    expect(screen.getByText("지난달 대비 +₩28,900")).toBeInTheDocument();
     expect(screen.getByText("8건")).toBeInTheDocument();
     expect(screen.getByText("위생용품")).toBeInTheDocument();
   });

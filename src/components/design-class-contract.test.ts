@@ -7,6 +7,9 @@ const themedFiles = [
   "src/components/app-shell.tsx",
   "src/components/scope-selector.tsx",
   "src/components/empty-state.tsx",
+  "src/components/dashboard/kpi-grid.tsx",
+  "src/components/dashboard/charts.tsx",
+  "src/components/dashboard/lists.tsx",
 ];
 
 describe("design class contract", () => {

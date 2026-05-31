@@ -14,10 +14,15 @@ import {
 } from "recharts";
 
 import { EmptyState } from "@/components/empty-state";
+import {
+  CHART_BAR_RADIUS,
+  CHART_COLORS,
+  CHART_GRID_COLOR,
+  CHART_TEXT_COLOR,
+} from "@/components/ui/chart-theme";
+import { Panel } from "@/components/ui/panel";
 import { formatKrw } from "@/lib/format";
 import type { CategorySpending, MonthlySpendingPoint } from "@/lib/reporting/dashboard";
-
-const COLORS = ["#0f172a", "#2563eb", "#059669", "#d97706", "#7c3aed", "#dc2626"];
 
 type ChartShellProps = {
   title: string;
@@ -26,10 +31,9 @@ type ChartShellProps = {
 
 function ChartShell({ title, children }: ChartShellProps) {
   return (
-    <section className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
-      <h2 className="text-base font-semibold text-slate-950">{title}</h2>
-      <div className="mt-4 h-72">{children}</div>
-    </section>
+    <Panel title={title}>
+      <div className="h-72">{children}</div>
+    </Panel>
   );
 }
 
@@ -46,16 +50,22 @@ export function MonthlySpendingChart({ data }: { data: MonthlySpendingPoint[] })
     <ChartShell title="월간 지출 추이">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} margin={{ left: 0, right: 8, top: 8, bottom: 0 }}>
-          <CartesianGrid stroke="#e2e8f0" vertical={false} />
-          <XAxis dataKey="label" tickLine={false} axisLine={false} />
+          <CartesianGrid stroke={CHART_GRID_COLOR} vertical={false} />
+          <XAxis
+            dataKey="label"
+            tickLine={false}
+            axisLine={false}
+            tick={{ fill: CHART_TEXT_COLOR }}
+          />
           <YAxis
             tickFormatter={(value) => `${Number(value) / 10000}만`}
             width={48}
             tickLine={false}
             axisLine={false}
+            tick={{ fill: CHART_TEXT_COLOR }}
           />
           <Tooltip formatter={(value) => formatKrw(Number(value))} />
-          <Bar dataKey="totalAmount" fill="#0f172a" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="totalAmount" fill={CHART_COLORS[0]} radius={CHART_BAR_RADIUS} />
         </BarChart>
       </ResponsiveContainer>
     </ChartShell>
@@ -85,7 +95,10 @@ export function CategoryChart({ data }: { data: CategorySpending[] }) {
               paddingAngle={2}
             >
               {data.map((entry, index) => (
-                <Cell fill={COLORS[index % COLORS.length]} key={entry.category} />
+                <Cell
+                  fill={CHART_COLORS[index % CHART_COLORS.length]}
+                  key={entry.category}
+                />
               ))}
             </Pie>
             <Tooltip formatter={(value) => formatKrw(Number(value))} />
@@ -94,14 +107,14 @@ export function CategoryChart({ data }: { data: CategorySpending[] }) {
         <ul className="space-y-2 self-center">
           {data.map((entry, index) => (
             <li className="flex items-center justify-between gap-3 text-sm" key={entry.category}>
-              <span className="flex min-w-0 items-center gap-2 text-slate-600">
+              <span className="flex min-w-0 items-center gap-2 text-body">
                 <span
                   className="size-2 rounded-full"
-                  style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                  style={{ backgroundColor: CHART_COLORS[index % CHART_COLORS.length] }}
                 />
                 <span className="truncate">{entry.category}</span>
               </span>
-              <span className="font-medium text-slate-950">{formatKrw(entry.amount)}</span>
+              <span className="font-medium text-ink">{formatKrw(entry.amount)}</span>
             </li>
           ))}
         </ul>
