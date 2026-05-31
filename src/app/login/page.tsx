@@ -1,6 +1,6 @@
-import { BarChart3 } from "lucide-react";
-
 import { enterDemoMode, login } from "@/app/login/actions";
+import { BrandMark } from "@/components/ui/brand-mark";
+import { buttonClassName } from "@/components/ui/button";
 import { isDevFallbackEnabled } from "@/lib/env";
 
 type LoginPageProps = {
@@ -19,39 +19,41 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   const demoEnabled = isDevFallbackEnabled();
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4 py-10">
-      <section className="w-full max-w-md rounded-md border border-slate-200 bg-white p-6 shadow-sm">
+    <main className="flex min-h-screen items-center justify-center bg-canvas px-4 py-10">
+      <section className="w-full max-w-md rounded-lg border border-hairline bg-surface-card p-8">
         <div className="flex items-center gap-3">
-          <div className="rounded-md bg-slate-950 p-2 text-white">
-            <BarChart3 className="size-5" aria-hidden="true" />
+          <div className="rounded-md bg-canvas p-2 text-ink">
+            <BrandMark />
           </div>
           <div>
-            <h1 className="text-xl font-semibold text-slate-950">buylog web</h1>
-            <p className="text-sm text-slate-500">소비재 관리 대시보드</p>
+            <h1 className="font-display text-3xl leading-tight text-ink">
+              buylog web
+            </h1>
+            <p className="text-sm text-muted">소비재 관리 대시보드</p>
           </div>
         </div>
 
         {errorMessage ? (
-          <p className="mt-5 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+          <p className="mt-5 rounded-md border border-error/30 bg-canvas px-3 py-2 text-sm text-error">
             {errorMessage}
           </p>
         ) : null}
 
         <form action={login} className="mt-6 space-y-4">
-          <label className="block text-sm font-medium text-slate-700">
+          <label className="block text-sm font-medium text-body">
             이메일
             <input
-              className="mt-1 h-10 w-full rounded-md border border-slate-300 px-3 text-sm outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+              className="mt-1 h-10 w-full rounded-md border border-hairline bg-canvas px-3 text-sm text-ink outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15"
               name="email"
               type="email"
               autoComplete="email"
               required
             />
           </label>
-          <label className="block text-sm font-medium text-slate-700">
+          <label className="block text-sm font-medium text-body">
             비밀번호
             <input
-              className="mt-1 h-10 w-full rounded-md border border-slate-300 px-3 text-sm outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+              className="mt-1 h-10 w-full rounded-md border border-hairline bg-canvas px-3 text-sm text-ink outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15"
               name="password"
               type="password"
               autoComplete="current-password"
@@ -59,7 +61,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             />
           </label>
           <button
-            className="h-10 w-full rounded-md bg-slate-950 px-4 text-sm font-medium text-white transition hover:bg-slate-800"
+            className={buttonClassName("primary", "w-full")}
             type="submit"
           >
             로그인
@@ -69,7 +71,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         {demoEnabled ? (
           <form action={enterDemoMode} className="mt-3">
             <button
-              className="h-10 w-full rounded-md border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+              className={buttonClassName("secondary", "w-full")}
               type="submit"
             >
               시연 모드로 보기

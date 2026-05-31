@@ -13,6 +13,12 @@ const themedFiles = [
   "src/components/reports/filter-bar.tsx",
   "src/components/reports/charts.tsx",
   "src/components/reports/tables.tsx",
+  "src/components/placeholder-page.tsx",
+  "src/app/page.tsx",
+  "src/app/reports/page.tsx",
+  "src/app/login/page.tsx",
+  "src/app/loading.tsx",
+  "src/app/error.tsx",
 ];
 
 describe("design class contract", () => {
