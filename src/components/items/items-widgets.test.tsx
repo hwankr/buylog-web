@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { ItemDetailPanel } from "@/components/items/detail";
 import { ItemsFilterBar } from "@/components/items/filter-bar";
@@ -11,6 +11,10 @@ import type {
   ItemListRow,
   ItemPurchaseHistoryRow,
 } from "@/lib/items/items";
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ replace: vi.fn() }),
+}));
 
 const params: ItemListParams = {
   search: "휴지",
@@ -85,6 +89,13 @@ describe("items widgets", () => {
     expect(screen.getByLabelText("가족 owner")).not.toBeChecked();
     expect(screen.getByRole("link", { name: "초기화" })).toHaveAttribute(
       "href",
+      "/items",
+    );
+    expect(
+      screen.queryByRole("button", { name: "적용" }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByLabelText("검색").closest("form")).toHaveAttribute(
+      "action",
       "/items",
     );
   });

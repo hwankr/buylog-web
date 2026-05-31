@@ -1,6 +1,7 @@
 import { Download, RotateCcw } from "lucide-react";
 
 import { ScopeSelector } from "@/components/scope-selector";
+import { AutoSubmitForm } from "@/components/ui/auto-submit-form";
 import { buttonClassName } from "@/components/ui/button";
 import { Panel } from "@/components/ui/panel";
 import { StatusPill } from "@/components/ui/status-pill";
@@ -139,7 +140,7 @@ export function ReportsFilterBar({
         </div>
       </div>
 
-      <form action="/reports" className="mt-4 space-y-4" method="get">
+      <AutoSubmitForm action="/reports" className="mt-4 space-y-4">
         <input name="scope" type="hidden" value={serializeScope(selectedScope)} />
 
         <fieldset className="space-y-2">
@@ -212,12 +213,7 @@ export function ReportsFilterBar({
           />
         </div>
 
-        <div className="flex justify-end">
-          <button className={buttonClassName("primary")} type="submit">
-            적용
-          </button>
-        </div>
-      </form>
+      </AutoSubmitForm>
     </Panel>
   );
 }

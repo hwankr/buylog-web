@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { ReportsFilterBar } from "@/components/reports/filter-bar";
 import {
@@ -11,6 +11,10 @@ import {
   ReportStoreSpendingTable,
 } from "@/components/reports/tables";
 import { resolveReportFilters } from "@/lib/reporting/reports";
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ replace: vi.fn() }),
+}));
 
 const anchorDate = new Date("2026-05-30T12:00:00+09:00");
 
@@ -69,6 +73,13 @@ describe("reports widgets", () => {
     );
     expect(screen.getByRole("link", { name: "CSV 내보내기" })).toHaveClass(
       "bg-primary",
+    );
+    expect(
+      screen.queryByRole("button", { name: "적용" }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByLabelText("사용자 지정").closest("form")).toHaveAttribute(
+      "action",
+      "/reports",
     );
     expect(screen.getByRole("link", { name: "내 물품" })).toHaveAttribute(
       "href",

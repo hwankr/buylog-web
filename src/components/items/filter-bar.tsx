@@ -1,6 +1,7 @@
 import { RotateCcw, Search } from "lucide-react";
 import Link from "next/link";
 
+import { AutoSubmitForm } from "@/components/ui/auto-submit-form";
 import { buttonClassName } from "@/components/ui/button";
 import { Panel } from "@/components/ui/panel";
 import { StatusPill } from "@/components/ui/status-pill";
@@ -81,7 +82,7 @@ export function ItemsFilterBar({ filterOptions, params }: ItemsFilterBarProps) {
 
   return (
     <Panel accent="amber">
-      <form action="/items" className="space-y-4" method="get">
+      <AutoSubmitForm action="/items" className="space-y-4">
         <div className="flex flex-wrap items-center gap-2">
           <StatusPill tone="teal">물품 탐색</StatusPill>
           {selectedFilterCounts.length > 0 ? (
@@ -140,9 +141,6 @@ export function ItemsFilterBar({ filterOptions, params }: ItemsFilterBarProps) {
           </label>
 
           <div className="flex gap-2">
-            <button className={buttonClassName("primary")} type="submit">
-              적용
-            </button>
             <Link className={buttonClassName("secondary")} href="/items">
               <RotateCcw aria-hidden="true" className="size-4" />
               초기화
@@ -166,7 +164,7 @@ export function ItemsFilterBar({ filterOptions, params }: ItemsFilterBarProps) {
             title="그룹"
           />
         </div>
-      </form>
+      </AutoSubmitForm>
     </Panel>
   );
 }
