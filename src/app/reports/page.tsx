@@ -10,6 +10,7 @@ import {
   ReportItemSpendingTable,
   ReportStoreSpendingTable,
 } from "@/components/reports/tables";
+import { PageHeader } from "@/components/ui/page-header";
 import { formatKoreanDate } from "@/lib/format";
 import { resolveViewer } from "@/lib/auth/viewer";
 import { loadReportsViewModel } from "@/lib/services/reports";
@@ -39,7 +40,7 @@ export default async function ReportsPage({ searchParams }: PageProps) {
   if (loadError || !viewModel) {
     return (
       <AppShell viewer={viewer}>
-        <section className="rounded-md border border-red-200 bg-red-50 p-5 text-sm text-red-700">
+        <section className="rounded-lg border border-error/30 bg-surface-card p-6 text-sm text-error">
           {loadError ?? "리포트를 불러오지 못했습니다."}
         </section>
       </AppShell>
@@ -49,20 +50,11 @@ export default async function ReportsPage({ searchParams }: PageProps) {
   return (
     <AppShell viewer={viewer}>
       <div className="space-y-5">
-        <header className="flex flex-col gap-2 border-b border-slate-200 pb-5">
-          <p className="text-sm font-medium text-slate-500">
-            {formatKoreanDate(viewModel.filters.range.from)} -{" "}
-            {formatKoreanDate(viewModel.filters.range.to)}
-          </p>
-          <div>
-            <h1 className="text-2xl font-semibold tracking-normal text-slate-950">
-              Reports
-            </h1>
-            <p className="mt-1 text-sm text-slate-500">
-              {viewModel.filters.range.label} 기준 지출 분석
-            </p>
-          </div>
-        </header>
+        <PageHeader
+          eyebrow={`${formatKoreanDate(viewModel.filters.range.from)} - ${formatKoreanDate(viewModel.filters.range.to)}`}
+          title="Reports"
+          description={`${viewModel.filters.range.label} 기준 지출 분석`}
+        />
 
         <ReportsFilterBar
           filterOptions={viewModel.filterOptions}

@@ -29,7 +29,7 @@ export function ScopeSelector({
   return (
     <nav
       aria-label="데이터 스코프"
-      className="inline-flex rounded-md border border-slate-200 bg-white p-1 shadow-sm"
+      className="inline-flex rounded-md border border-hairline bg-canvas p-1"
     >
       {scopes.map((scope) => {
         const selected = isSelected(scope, selectedScope);
@@ -39,8 +39,8 @@ export function ScopeSelector({
             className={[
               "flex h-9 items-center gap-1 rounded px-3 text-sm font-medium transition",
               selected
-                ? "bg-slate-900 text-white"
-                : "text-slate-600 hover:bg-slate-100 hover:text-slate-950",
+                ? "bg-primary text-on-primary"
+                : "text-muted active:bg-surface-card active:text-ink",
             ].join(" ")}
             href={hrefForScope?.(scope) ?? `/?scope=${encodeURIComponent(serializeScope(scope))}`}
             key={serializeScope(scope)}

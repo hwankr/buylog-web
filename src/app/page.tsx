@@ -9,6 +9,7 @@ import {
   ReplacementDueList,
 } from "@/components/dashboard/lists";
 import { ScopeSelector } from "@/components/scope-selector";
+import { PageHeader } from "@/components/ui/page-header";
 import { formatKoreanDate } from "@/lib/format";
 import { resolveViewer } from "@/lib/auth/viewer";
 import { loadDashboardViewModel } from "@/lib/services/dashboard";
@@ -40,7 +41,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   if (loadError || !viewModel) {
     return (
       <AppShell viewer={viewer}>
-        <section className="rounded-md border border-red-200 bg-red-50 p-5 text-sm text-red-700">
+        <section className="rounded-lg border border-error/30 bg-surface-card p-6 text-sm text-error">
           {loadError ?? "대시보드를 불러오지 못했습니다."}
         </section>
       </AppShell>
@@ -50,20 +51,17 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   return (
     <AppShell viewer={viewer}>
       <div className="space-y-5">
-        <header className="flex flex-col gap-4 border-b border-slate-200 pb-5 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <p className="text-sm font-medium text-slate-500">
-              {formatKoreanDate(new Date())}
-            </p>
-            <h1 className="mt-1 text-2xl font-semibold tracking-normal text-slate-950">
-              대시보드
-            </h1>
-          </div>
-          <ScopeSelector
-            scopes={viewModel.scopes}
-            selectedScope={viewModel.selectedScope}
-          />
-        </header>
+        <PageHeader
+          eyebrow={formatKoreanDate(new Date())}
+          title="대시보드"
+          description="구매액, 재구매 일정, 가격 변동을 한 화면에서 확인합니다."
+          actions={
+            <ScopeSelector
+              scopes={viewModel.scopes}
+              selectedScope={viewModel.selectedScope}
+            />
+          }
+        />
 
         <KpiGrid kpis={viewModel.dashboard.kpis} />
 

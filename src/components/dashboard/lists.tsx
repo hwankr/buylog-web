@@ -1,6 +1,7 @@
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 
 import { EmptyState } from "@/components/empty-state";
+import { Panel } from "@/components/ui/panel";
 import { formatKoreanDate, formatKrw } from "@/lib/format";
 import type {
   PriceMovement,
@@ -15,12 +16,7 @@ function Section({
   title: string;
   children: React.ReactNode;
 }) {
-  return (
-    <section className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
-      <h2 className="text-base font-semibold text-slate-950">{title}</h2>
-      <div className="mt-4">{children}</div>
-    </section>
-  );
+  return <Panel title={title}>{children}</Panel>;
 }
 
 export function RecentPurchaseTable({ rows }: { rows: RecentPurchase[] }) {
@@ -36,7 +32,7 @@ export function RecentPurchaseTable({ rows }: { rows: RecentPurchase[] }) {
     <Section title="최근 구매 이력">
       <div className="overflow-x-auto">
         <table className="min-w-full text-left text-sm">
-          <thead className="border-b border-slate-200 text-xs uppercase text-slate-500">
+          <thead className="border-b border-hairline text-xs uppercase text-muted">
             <tr>
               <th className="py-2 pr-4 font-medium">날짜</th>
               <th className="py-2 pr-4 font-medium">품목</th>
@@ -44,18 +40,18 @@ export function RecentPurchaseTable({ rows }: { rows: RecentPurchase[] }) {
               <th className="py-2 pr-4 text-right font-medium">금액</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-hairline-soft">
             {rows.map((row) => (
               <tr key={row.purchaseId}>
-                <td className="whitespace-nowrap py-3 pr-4 text-slate-600">
+                <td className="whitespace-nowrap py-3 pr-4 text-body">
                   {formatKoreanDate(row.purchaseDate)}
                 </td>
                 <td className="py-3 pr-4">
-                  <p className="font-medium text-slate-950">{row.itemName}</p>
-                  <p className="text-xs text-slate-500">{row.brand || row.category}</p>
+                  <p className="font-medium text-ink">{row.itemName}</p>
+                  <p className="text-xs text-muted">{row.brand || row.category}</p>
                 </td>
-                <td className="py-3 pr-4 text-slate-600">{row.storeName || "-"}</td>
-                <td className="py-3 pr-4 text-right font-medium text-slate-950">
+                <td className="py-3 pr-4 text-body">{row.storeName || "-"}</td>
+                <td className="py-3 pr-4 text-right font-medium text-ink">
                   {formatKrw(row.price)}
                 </td>
               </tr>
@@ -78,12 +74,12 @@ export function ReplacementDueList({ items }: { items: ReplacementDueItem[] }) {
 
   return (
     <Section title="교체 임박 품목">
-      <ul className="divide-y divide-slate-100">
+      <ul className="divide-y divide-hairline-soft">
         {items.map((item) => (
           <li className="flex items-center justify-between gap-4 py-3" key={item.itemId}>
             <div className="min-w-0">
-              <p className="truncate font-medium text-slate-950">{item.itemName}</p>
-              <p className="text-sm text-slate-500">
+              <p className="truncate font-medium text-ink">{item.itemName}</p>
+              <p className="text-sm text-muted">
                 {item.expectedReplacementDate
                   ? formatKoreanDate(item.expectedReplacementDate)
                   : "예상일 없음"}
@@ -93,8 +89,8 @@ export function ReplacementDueList({ items }: { items: ReplacementDueItem[] }) {
               </p>
             </div>
             <div className="text-right">
-              <p className="font-semibold text-slate-950">{item.daysUntilReplacement}일</p>
-              <p className="text-sm text-slate-500">{formatKrw(item.expectedPrice)}</p>
+              <p className="font-medium text-ink">{item.daysUntilReplacement}일</p>
+              <p className="text-sm text-muted">{formatKrw(item.expectedPrice)}</p>
             </div>
           </li>
         ))}
@@ -114,20 +110,20 @@ export function PriceMovementList({ movements }: { movements: PriceMovement[] })
 
   return (
     <Section title="가격 변동">
-      <ul className="divide-y divide-slate-100">
+      <ul className="divide-y divide-hairline-soft">
         {movements.map((movement) => {
           const increased = movement.deltaAmount > 0;
           const Icon = increased ? ArrowUpRight : ArrowDownRight;
           return (
             <li className="flex items-center justify-between gap-4 py-3" key={movement.itemId}>
               <div className="min-w-0">
-                <p className="truncate font-medium text-slate-950">{movement.itemName}</p>
-                <p className="text-sm text-slate-500">
+                <p className="truncate font-medium text-ink">{movement.itemName}</p>
+                <p className="text-sm text-muted">
                   {movement.previousStore || "-"} → {movement.currentStore || "-"}
                 </p>
               </div>
-              <div className={increased ? "text-red-600" : "text-emerald-600"}>
-                <p className="flex items-center justify-end gap-1 font-semibold">
+              <div className={increased ? "text-error" : "text-success"}>
+                <p className="flex items-center justify-end gap-1 font-medium">
                   <Icon className="size-4" aria-hidden="true" />
                   {formatKrw(Math.abs(movement.deltaAmount))}
                 </p>
