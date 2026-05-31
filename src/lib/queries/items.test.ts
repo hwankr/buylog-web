@@ -36,6 +36,7 @@ class FakeItemClient {
           item_id: "item-1",
           item_name: "샴푸",
           brand: "브랜드",
+          image_url: "https://example.com/item.svg",
           category_id: "cat-1",
           category: "위생용품",
           group_id: null,
@@ -55,6 +56,7 @@ class FakeItemClient {
           item_id: "item-1",
           item_name: "샴푸",
           brand: "브랜드",
+          image_url: "https://example.com/detail.svg",
           category_id: "cat-1",
           category: "위생용품",
           group_id: null,
@@ -131,6 +133,7 @@ describe("item query service", () => {
       },
     });
     expect(rows[0]?.itemName).toBe("샴푸");
+    expect(rows[0]?.imageUrl).toBe("https://example.com/item.svg");
   });
 
   it("loads detail and purchase history", async () => {
@@ -152,6 +155,7 @@ describe("item query service", () => {
       params: { target_item_id: "item-1", limit_count: 50 },
     });
     expect(detail?.lastStoreName).toBe("쿠팡");
+    expect(detail?.imageUrl).toBe("https://example.com/detail.svg");
     expect(history[0]?.priceDelta).toBe(2000);
   });
 

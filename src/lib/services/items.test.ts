@@ -51,6 +51,7 @@ describe("item view model service", () => {
         itemId: "item-1",
         itemName: "샴푸",
         brand: "브랜드",
+        imageUrl: "https://example.com/item.svg",
         categoryId: "cat-1",
         category: "위생용품",
         groupId: null,
@@ -69,6 +70,7 @@ describe("item view model service", () => {
       itemId: "item-1",
       itemName: "샴푸",
       brand: "브랜드",
+      imageUrl: "https://example.com/detail.svg",
       categoryId: "cat-1",
       category: "위생용품",
       groupId: null,
@@ -112,6 +114,7 @@ describe("item view model service", () => {
       anchorDate: "2026-05-31",
     });
     expect(viewModel.items[0]?.itemName).toBe("샴푸");
+    expect(viewModel.items[0]?.imageUrl).toBe("https://example.com/item.svg");
     expect(mockedGetItemFilterOptions).toHaveBeenCalledWith({
       client: expect.anything(),
     });

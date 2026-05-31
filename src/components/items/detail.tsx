@@ -170,6 +170,28 @@ export function ItemDetailPanel({
 }) {
   return (
     <div className="space-y-5">
+      <div className="flex flex-col gap-4 rounded-lg border border-hairline bg-surface-card p-4 sm:flex-row sm:items-center">
+        {item.imageUrl ? (
+          <img
+            alt={`${item.itemName} 이미지`}
+            className="h-32 w-full rounded-md border border-hairline object-cover sm:w-44"
+            height={128}
+            src={item.imageUrl}
+            width={176}
+          />
+        ) : (
+          <div className="grid h-32 w-full place-items-center rounded-md border border-hairline bg-surface-soft text-2xl font-semibold text-muted sm:w-44">
+            {item.itemName.slice(0, 1)}
+          </div>
+        )}
+        <div className="min-w-0">
+          <p className="text-sm text-muted">{item.brand || item.category}</p>
+          <h2 className="break-words text-xl font-semibold text-ink">
+            {item.itemName}
+          </h2>
+        </div>
+      </div>
+
       <div className="grid gap-4 lg:grid-cols-4">
         <MetricCard
           accent="amber"

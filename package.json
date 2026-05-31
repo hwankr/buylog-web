@@ -9,7 +9,10 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "db:demo:export": "node scripts/demo-data/export-current-data.mjs",
+    "db:demo:seed": "node scripts/demo-data/seed-demo-data.mjs",
+    "db:demo:verify": "node scripts/demo-data/verify-demo-data.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.3",

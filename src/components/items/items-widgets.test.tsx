@@ -39,6 +39,7 @@ const rows: ItemListRow[] = [
     itemId: "item-1",
     itemName: "휴지",
     brand: "브랜드",
+    imageUrl: "https://example.com/item.svg",
     categoryId: "cat-1",
     category: "위생용품",
     groupId: null,
@@ -107,6 +108,10 @@ describe("items widgets", () => {
       "href",
       "/items/item-1",
     );
+    expect(screen.getByRole("img", { name: "휴지 이미지" })).toHaveAttribute(
+      "src",
+      "https://example.com/item.svg",
+    );
     expect(screen.getByText("위생용품")).toHaveClass("bg-accent-amber/20");
     expect(screen.getByText("내 물품")).toHaveClass("bg-surface-soft");
     expect(screen.getByText("₩22,000")).toBeInTheDocument();
@@ -132,6 +137,10 @@ describe("items widgets", () => {
   it("renders detail metrics and purchase history", () => {
     render(<ItemDetailPanel history={history} item={detail} />);
 
+    expect(screen.getByRole("img", { name: "휴지 이미지" })).toHaveAttribute(
+      "src",
+      "https://example.com/item.svg",
+    );
     expect(screen.getByRole("region", { name: "가격 요약" })).toHaveClass(
       "bg-surface-dark",
       "text-on-dark",

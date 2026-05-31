@@ -60,13 +60,31 @@ export function ItemsTable({ items }: { items: ItemListRow[] }) {
             {items.map((item) => (
               <tr className="active:bg-surface-soft" key={item.itemId}>
                 <td className={tableCellClassName}>
-                  <Link
-                    className="font-medium text-ink underline-offset-4 active:underline"
-                    href={`/items/${item.itemId}`}
-                  >
-                    {item.itemName}
-                  </Link>
-                  <p className="text-xs text-muted">{item.brand || "-"}</p>
+                  <div className="flex min-w-56 items-center gap-3">
+                    {item.imageUrl ? (
+                      <img
+                        alt={`${item.itemName} 이미지`}
+                        className="size-11 shrink-0 rounded-md border border-hairline object-cover"
+                        height={44}
+                        loading="lazy"
+                        src={item.imageUrl}
+                        width={44}
+                      />
+                    ) : (
+                      <div className="grid size-11 shrink-0 place-items-center rounded-md border border-hairline bg-surface-soft text-xs font-semibold text-muted">
+                        {item.itemName.slice(0, 1)}
+                      </div>
+                    )}
+                    <div>
+                      <Link
+                        className="font-medium text-ink underline-offset-4 active:underline"
+                        href={`/items/${item.itemId}`}
+                      >
+                        {item.itemName}
+                      </Link>
+                      <p className="text-xs text-muted">{item.brand || "-"}</p>
+                    </div>
+                  </div>
                 </td>
                 <td className={tableCellClassName}>
                   <div className="flex flex-wrap gap-2">

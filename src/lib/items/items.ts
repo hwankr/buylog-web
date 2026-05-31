@@ -50,6 +50,7 @@ export type ItemListRpcRow = {
   item_id: string;
   item_name: string;
   brand: string | null;
+  image_url: string | null;
   category_id: string | null;
   category: string | null;
   group_id: string | null;
@@ -68,6 +69,7 @@ export type ItemListRow = {
   itemId: string;
   itemName: string;
   brand: string;
+  imageUrl: string;
   categoryId: string | null;
   category: string;
   groupId: string | null;
@@ -86,6 +88,7 @@ export type ItemDetailRpcRow = {
   item_id: string;
   item_name: string;
   brand: string | null;
+  image_url: string | null;
   category_id: string | null;
   category: string | null;
   group_id: string | null;
@@ -260,6 +263,7 @@ export function mapItemListRows(rows: ItemListRpcRow[]): ItemListRow[] {
     itemId: row.item_id,
     itemName: row.item_name,
     brand: row.brand ?? "",
+    imageUrl: row.image_url?.trim() ?? "",
     categoryId: row.category_id,
     category: row.category?.trim() || DEFAULT_CATEGORY_NAME,
     groupId: row.group_id,
@@ -283,6 +287,7 @@ export function mapItemDetailRows(rows: ItemDetailRpcRow[]): ItemDetail | null {
     itemId: row.item_id,
     itemName: row.item_name,
     brand: row.brand ?? "",
+    imageUrl: row.image_url?.trim() ?? "",
     categoryId: row.category_id,
     category: row.category?.trim() || DEFAULT_CATEGORY_NAME,
     groupId: row.group_id,
