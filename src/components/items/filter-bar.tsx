@@ -1,8 +1,10 @@
 import { RotateCcw, Search } from "lucide-react";
 import Link from "next/link";
 
+import { AutoSubmitForm } from "@/components/ui/auto-submit-form";
 import { buttonClassName } from "@/components/ui/button";
 import { Panel } from "@/components/ui/panel";
+import { StatusPill } from "@/components/ui/status-pill";
 import type {
   ItemFilterOption,
   ItemFilterOptions,
@@ -73,9 +75,27 @@ function CheckboxGroup({
 }
 
 export function ItemsFilterBar({ filterOptions, params }: ItemsFilterBarProps) {
+  const selectedFilterCounts = [
+    { label: "카테고리", count: params.categories.length },
+    { label: "그룹", count: params.groups.length },
+  ].filter((item) => item.count > 0);
+
   return (
-    <Panel>
-      <form action="/items" className="space-y-4" method="get">
+    <Panel accent="amber">
+      <AutoSubmitForm action="/items" className="space-y-4">
+        <div className="flex flex-wrap items-center gap-2">
+          <StatusPill tone="teal">물품 탐색</StatusPill>
+          {selectedFilterCounts.length > 0 ? (
+            selectedFilterCounts.map((item) => (
+              <StatusPill key={item.label} tone="primary">
+                {item.label} {item.count}
+              </StatusPill>
+            ))
+          ) : (
+            <StatusPill tone="neutral">전체 물품</StatusPill>
+          )}
+        </div>
+
         <div className="grid gap-3 lg:grid-cols-[minmax(220px,1fr)_180px_140px_auto] lg:items-end">
           <label className="space-y-1 text-sm font-medium text-body">
             <span>검색</span>
@@ -121,9 +141,6 @@ export function ItemsFilterBar({ filterOptions, params }: ItemsFilterBarProps) {
           </label>
 
           <div className="flex gap-2">
-            <button className={buttonClassName("primary")} type="submit">
-              적용
-            </button>
             <Link className={buttonClassName("secondary")} href="/items">
               <RotateCcw aria-hidden="true" className="size-4" />
               초기화
@@ -147,7 +164,7 @@ export function ItemsFilterBar({ filterOptions, params }: ItemsFilterBarProps) {
             title="그룹"
           />
         </div>
-      </form>
+      </AutoSubmitForm>
     </Panel>
   );
 }

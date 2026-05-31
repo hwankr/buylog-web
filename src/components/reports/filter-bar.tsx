@@ -1,8 +1,10 @@
 import { Download, RotateCcw } from "lucide-react";
 
 import { ScopeSelector } from "@/components/scope-selector";
+import { AutoSubmitForm } from "@/components/ui/auto-submit-form";
 import { buttonClassName } from "@/components/ui/button";
 import { Panel } from "@/components/ui/panel";
+import { StatusPill } from "@/components/ui/status-pill";
 import {
   buildReportHref,
   type ReportFilterOption,
@@ -48,7 +50,9 @@ function CheckboxGroup({
       ) : (
         <div className="max-h-48 space-y-1 overflow-y-auto rounded-md border border-hairline bg-canvas p-2">
           {options.map((option) => {
-            const label = [option.label, option.secondaryLabel].filter(Boolean).join(" ");
+            const label = [option.label, option.secondaryLabel]
+              .filter(Boolean)
+              .join(" ");
             return (
               <label
                 className="flex items-center gap-2 rounded px-2 py-1.5 text-sm text-body active:bg-surface-card"
@@ -89,15 +93,35 @@ export function ReportsFilterBar({
     items: [],
     stores: [],
   };
+  const selectedFilterCounts = [
+    { label: "카테고리", count: filters.categories.length },
+    { label: "물품", count: filters.items.length },
+    { label: "매장", count: filters.stores.length },
+  ].filter((item) => item.count > 0);
 
   return (
-    <Panel>
+    <Panel accent="teal">
       <div className="flex flex-col gap-3 border-b border-hairline-soft pb-5 xl:flex-row xl:items-center xl:justify-between">
-        <ScopeSelector
-          hrefForScope={(scope) => buildReportHref("/reports", clearedFilters, scope)}
-          scopes={scopes}
-          selectedScope={selectedScope}
-        />
+        <div className="flex flex-col gap-3 xl:flex-row xl:items-center">
+          <ScopeSelector
+            hrefForScope={(scope) =>
+              buildReportHref("/reports", clearedFilters, scope)
+            }
+            scopes={scopes}
+            selectedScope={selectedScope}
+          />
+          {selectedFilterCounts.length > 0 ? (
+            <div className="flex flex-wrap gap-2">
+              {selectedFilterCounts.map((item) => (
+                <StatusPill key={item.label} tone="primary">
+                  {item.label} {item.count}
+                </StatusPill>
+              ))}
+            </div>
+          ) : (
+            <StatusPill tone="neutral">전체 데이터</StatusPill>
+          )}
+        </div>
         <div className="flex flex-wrap gap-2">
           <a
             className={buttonClassName("secondary")}
@@ -116,7 +140,7 @@ export function ReportsFilterBar({
         </div>
       </div>
 
-      <form action="/reports" className="mt-4 space-y-4" method="get">
+      <AutoSubmitForm action="/reports" className="mt-4 space-y-4">
         <input name="scope" type="hidden" value={serializeScope(selectedScope)} />
 
         <fieldset className="space-y-2">
@@ -174,11 +198,11 @@ export function ReportsFilterBar({
             title="카테고리"
           />
           <CheckboxGroup
-            emptyText="선택 가능한 품목이 없습니다."
+            emptyText="선택 가능한 물품이 없습니다."
             name="item"
             options={filterOptions.items}
             selectedValues={filters.items}
-            title="품목"
+            title="물품"
           />
           <CheckboxGroup
             emptyText="선택 가능한 매장이 없습니다."
@@ -189,15 +213,7 @@ export function ReportsFilterBar({
           />
         </div>
 
-        <div className="flex justify-end">
-          <button
-            className={buttonClassName("primary")}
-            type="submit"
-          >
-            적용
-          </button>
-        </div>
-      </form>
+      </AutoSubmitForm>
     </Panel>
   );
 }

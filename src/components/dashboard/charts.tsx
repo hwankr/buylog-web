@@ -18,11 +18,16 @@ import {
   CHART_BAR_RADIUS,
   CHART_COLORS,
   CHART_GRID_COLOR,
+  CHART_INITIAL_DIMENSION,
   CHART_TEXT_COLOR,
 } from "@/components/ui/chart-theme";
 import { Panel } from "@/components/ui/panel";
+import { StatusPill } from "@/components/ui/status-pill";
 import { formatKrw } from "@/lib/format";
-import type { CategorySpending, MonthlySpendingPoint } from "@/lib/reporting/dashboard";
+import type {
+  CategorySpending,
+  MonthlySpendingPoint,
+} from "@/lib/reporting/dashboard";
 
 type ChartShellProps = {
   title: string;
@@ -31,7 +36,11 @@ type ChartShellProps = {
 
 function ChartShell({ title, children }: ChartShellProps) {
   return (
-    <Panel title={title}>
+    <Panel
+      accent="coral"
+      title={title}
+      titleAdornment={<StatusPill tone="primary">최근 데이터</StatusPill>}
+    >
       <div className="h-72">{children}</div>
     </Panel>
   );
@@ -48,7 +57,11 @@ export function MonthlySpendingChart({ data }: { data: MonthlySpendingPoint[] })
 
   return (
     <ChartShell title="월간 지출 추이">
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer
+        height="100%"
+        initialDimension={CHART_INITIAL_DIMENSION}
+        width="100%"
+      >
         <BarChart data={data} margin={{ left: 0, right: 8, top: 8, bottom: 0 }}>
           <CartesianGrid stroke={CHART_GRID_COLOR} vertical={false} />
           <XAxis
@@ -65,7 +78,11 @@ export function MonthlySpendingChart({ data }: { data: MonthlySpendingPoint[] })
             tick={{ fill: CHART_TEXT_COLOR }}
           />
           <Tooltip formatter={(value) => formatKrw(Number(value))} />
-          <Bar dataKey="totalAmount" fill={CHART_COLORS[0]} radius={CHART_BAR_RADIUS} />
+          <Bar
+            dataKey="totalAmount"
+            fill={CHART_COLORS[0]}
+            radius={CHART_BAR_RADIUS}
+          />
         </BarChart>
       </ResponsiveContainer>
     </ChartShell>
@@ -84,7 +101,11 @@ export function CategoryChart({ data }: { data: CategorySpending[] }) {
   return (
     <ChartShell title="카테고리별 지출">
       <div className="grid h-full gap-4 md:grid-cols-[minmax(0,1fr)_180px]">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer
+          height="100%"
+          initialDimension={CHART_INITIAL_DIMENSION}
+          width="100%"
+        >
           <PieChart>
             <Pie
               data={data}
@@ -106,15 +127,22 @@ export function CategoryChart({ data }: { data: CategorySpending[] }) {
         </ResponsiveContainer>
         <ul className="space-y-2 self-center">
           {data.map((entry, index) => (
-            <li className="flex items-center justify-between gap-3 text-sm" key={entry.category}>
+            <li
+              className="flex items-center justify-between gap-3 text-sm"
+              key={entry.category}
+            >
               <span className="flex min-w-0 items-center gap-2 text-body">
                 <span
                   className="size-2 rounded-full"
-                  style={{ backgroundColor: CHART_COLORS[index % CHART_COLORS.length] }}
+                  style={{
+                    backgroundColor: CHART_COLORS[index % CHART_COLORS.length],
+                  }}
                 />
                 <span className="truncate">{entry.category}</span>
               </span>
-              <span className="font-medium text-ink">{formatKrw(entry.amount)}</span>
+              <span className="font-medium text-ink">
+                {formatKrw(entry.amount)}
+              </span>
             </li>
           ))}
         </ul>

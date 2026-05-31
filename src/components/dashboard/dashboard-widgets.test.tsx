@@ -31,8 +31,7 @@ describe("dashboard widgets", () => {
     );
 
     const firstCard = screen.getByText("이번 달 구매액").closest("article");
-    expect(firstCard).toHaveClass("bg-surface-card", "border-hairline", "rounded-lg");
-    expect(screen.getByText("이번 달 구매액")).toBeInTheDocument();
+    expect(firstCard).toHaveClass("bg-surface-dark", "text-on-dark");
     expect(screen.getByText("₩128,900")).toBeInTheDocument();
     expect(screen.getByText("지난달 대비 +₩28,900")).toBeInTheDocument();
     expect(screen.getByText("8건")).toBeInTheDocument();
@@ -51,10 +50,14 @@ describe("dashboard widgets", () => {
     );
 
     expect(screen.getByText("월간 지출 데이터가 없습니다.")).toBeInTheDocument();
-    expect(screen.getByText("카테고리 지출 데이터가 없습니다.")).toBeInTheDocument();
+    expect(
+      screen.getByText("카테고리 지출 데이터가 없습니다."),
+    ).toBeInTheDocument();
     expect(screen.getByText("최근 구매 이력이 없습니다.")).toBeInTheDocument();
-    expect(screen.getByText("교체 임박 품목이 없습니다.")).toBeInTheDocument();
-    expect(screen.getByText("가격 변동이 감지된 품목이 없습니다.")).toBeInTheDocument();
+    expect(screen.getByText("교체 임박 물품이 없습니다.")).toBeInTheDocument();
+    expect(
+      screen.getByText("가격 변동이 감지된 물품이 없습니다."),
+    ).toBeInTheDocument();
   });
 
   it("renders scope links with URL query values", () => {

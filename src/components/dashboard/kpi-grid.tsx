@@ -7,6 +7,7 @@ import {
   Wallet,
 } from "lucide-react";
 
+import { MetricCard } from "@/components/ui/metric-card";
 import { formatKrw } from "@/lib/format";
 import type { DashboardKpis } from "@/lib/reporting/dashboard";
 
@@ -60,29 +61,32 @@ export function KpiGrid({ kpis }: KpiGridProps) {
 
   return (
     <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-      {cards.map((card) => {
+      {cards.map((card, index) => {
         const Icon = card.icon;
         return (
-          <article
-            className="rounded-lg border border-hairline bg-surface-card p-6"
+          <MetricCard
+            accent={
+              index === 0
+                ? "coral"
+                : index === 1
+                  ? "teal"
+                  : index === 2
+                    ? "amber"
+                    : "dark"
+            }
+            eyebrow={index === 0 ? "핵심 지표" : undefined}
+            helper={
+              <span className="flex items-center gap-1">
+                {card.label === "이번 달 구매액" ? directionIcon : null}
+                {card.helper}
+              </span>
+            }
+            icon={<Icon className="size-4" aria-hidden="true" />}
             key={card.label}
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div className="space-y-1">
-                <p className="text-sm font-medium text-muted">{card.label}</p>
-                <p className="font-display text-4xl leading-tight text-ink">
-                  {card.value}
-                </p>
-              </div>
-              <div className="rounded-md border border-hairline bg-canvas p-2 text-primary">
-                <Icon className="size-4" aria-hidden="true" />
-              </div>
-            </div>
-            <p className="mt-4 flex items-center gap-1 text-sm text-muted">
-              {card.label === "이번 달 구매액" ? directionIcon : null}
-              {card.helper}
-            </p>
-          </article>
+            title={card.label}
+            tone={index === 0 ? "dark" : "card"}
+            value={card.value}
+          />
         );
       })}
     </section>

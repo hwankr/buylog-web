@@ -1,7 +1,17 @@
 import Link from "next/link";
 
 import { EmptyState } from "@/components/empty-state";
+import {
+  TableShell,
+  tableBodyClassName,
+  tableCellClassName,
+  tableClassName,
+  tableHeadClassName,
+  tableHeaderCellClassName,
+  tableNumberCellClassName,
+} from "@/components/ui/data-table";
 import { Panel } from "@/components/ui/panel";
+import { StatusPill } from "@/components/ui/status-pill";
 import { formatKoreanDate, formatKrw } from "@/lib/format";
 import type { ItemListRow } from "@/lib/items/items";
 
@@ -24,31 +34,32 @@ function repurchaseText(item: ItemListRow) {
 export function ItemsTable({ items }: { items: ItemListRow[] }) {
   if (items.length === 0) {
     return (
-      <Panel title="품목 목록">
-        <EmptyState message="조건에 맞는 품목이 없습니다." />
+      <Panel title="물품 목록">
+        <EmptyState message="조건에 맞는 물품이 없습니다." />
       </Panel>
     );
   }
 
   return (
-    <Panel title="품목 목록">
-      <div className="overflow-x-auto">
-        <table className="min-w-full text-left text-sm">
-          <thead className="border-b border-hairline text-xs uppercase text-muted">
+    <Panel title="물품 목록">
+      <TableShell label="물품 목록">
+        <table className={tableClassName}>
+          <thead className={tableHeadClassName}>
             <tr>
-              <th className="py-2 pr-4 font-medium">품목</th>
-              <th className="py-2 pr-4 font-medium">카테고리</th>
-              <th className="py-2 pr-4 font-medium">그룹</th>
-              <th className="py-2 pr-4 text-right font-medium">구매</th>
-              <th className="py-2 pr-4 text-right font-medium">누적 지출</th>
-              <th className="py-2 pr-4 font-medium">최근 구매</th>
-              <th className="py-2 pr-4 font-medium">재구매 예상</th>
+              <th className={tableHeaderCellClassName}>물품</th>
+              <th className={tableHeaderCellClassName}>분류</th>
+              <th className={`${tableHeaderCellClassName} text-right`}>구매</th>
+              <th className={`${tableHeaderCellClassName} text-right`}>
+                누적 지출
+              </th>
+              <th className={tableHeaderCellClassName}>최근 구매</th>
+              <th className={tableHeaderCellClassName}>재구매 예상</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-hairline-soft">
+          <tbody className={tableBodyClassName}>
             {items.map((item) => (
-              <tr key={item.itemId}>
-                <td className="py-3 pr-4">
+              <tr className="active:bg-surface-soft" key={item.itemId}>
+                <td className={tableCellClassName}>
                   <Link
                     className="font-medium text-ink underline-offset-4 active:underline"
                     href={`/items/${item.itemId}`}
@@ -57,25 +68,29 @@ export function ItemsTable({ items }: { items: ItemListRow[] }) {
                   </Link>
                   <p className="text-xs text-muted">{item.brand || "-"}</p>
                 </td>
-                <td className="py-3 pr-4 text-body">{item.category}</td>
-                <td className="py-3 pr-4 text-body">{item.groupLabel}</td>
-                <td className="py-3 pr-4 text-right text-body">
+                <td className={tableCellClassName}>
+                  <div className="flex flex-wrap gap-2">
+                    <StatusPill tone="amber">{item.category}</StatusPill>
+                    <StatusPill tone="neutral">{item.groupLabel}</StatusPill>
+                  </div>
+                </td>
+                <td className={tableNumberCellClassName}>
                   {item.purchaseCount}건
                 </td>
-                <td className="py-3 pr-4 text-right font-medium text-ink">
+                <td className={tableNumberCellClassName}>
                   {formatKrw(item.totalSpent)}
                 </td>
-                <td className="whitespace-nowrap py-3 pr-4 text-body">
+                <td className={`${tableCellClassName} whitespace-nowrap`}>
                   {dateOrDash(item.lastPurchaseDate)}
                 </td>
-                <td className="whitespace-nowrap py-3 pr-4 text-body">
+                <td className={`${tableCellClassName} whitespace-nowrap`}>
                   {repurchaseText(item)}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-      </div>
+      </TableShell>
     </Panel>
   );
 }

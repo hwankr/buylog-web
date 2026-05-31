@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { ItemDetailPanel } from "@/components/items/detail";
 import { ItemsFilterBar } from "@/components/items/filter-bar";
@@ -12,8 +12,12 @@ import type {
   ItemPurchaseHistoryRow,
 } from "@/lib/items/items";
 
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ replace: vi.fn() }),
+}));
+
 const params: ItemListParams = {
-  search: "샴푸",
+  search: "휴지",
   sort: "total_spent",
   direction: "desc",
   categories: ["cat-1"],
@@ -33,7 +37,7 @@ const filterOptions: ItemFilterOptions = {
 const rows: ItemListRow[] = [
   {
     itemId: "item-1",
-    itemName: "샴푸",
+    itemName: "휴지",
     brand: "브랜드",
     categoryId: "cat-1",
     category: "위생용품",
@@ -75,7 +79,9 @@ describe("items widgets", () => {
   it("renders list filters with selected params", () => {
     render(<ItemsFilterBar filterOptions={filterOptions} params={params} />);
 
-    expect(screen.getByLabelText("검색")).toHaveValue("샴푸");
+    expect(screen.getByText("카테고리 1")).toHaveClass("bg-primary/15");
+    expect(screen.getByText("그룹 1")).toHaveClass("bg-primary/15");
+    expect(screen.getByLabelText("검색")).toHaveValue("휴지");
     expect(screen.getByLabelText("정렬")).toHaveValue("total_spent");
     expect(screen.getByLabelText("방향")).toHaveValue("desc");
     expect(screen.getByLabelText("위생용품")).toBeChecked();
@@ -85,15 +91,24 @@ describe("items widgets", () => {
       "href",
       "/items",
     );
+    expect(
+      screen.queryByRole("button", { name: "적용" }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByLabelText("검색").closest("form")).toHaveAttribute(
+      "action",
+      "/items",
+    );
   });
 
   it("renders item table rows with detail links", () => {
     render(<ItemsTable items={rows} />);
 
-    expect(screen.getByRole("link", { name: "샴푸" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "휴지" })).toHaveAttribute(
       "href",
       "/items/item-1",
     );
+    expect(screen.getByText("위생용품")).toHaveClass("bg-accent-amber/20");
+    expect(screen.getByText("내 물품")).toHaveClass("bg-surface-soft");
     expect(screen.getByText("₩22,000")).toBeInTheDocument();
     expect(screen.getByText("2026. 5. 20.")).toBeInTheDocument();
     expect(screen.getByText("2026. 6. 19.")).toBeInTheDocument();
@@ -102,12 +117,16 @@ describe("items widgets", () => {
   it("renders item table empty state", () => {
     render(<ItemsTable items={[]} />);
 
-    expect(screen.getByText("조건에 맞는 품목이 없습니다.")).toBeInTheDocument();
+    expect(screen.getByText("조건에 맞는 물품이 없습니다.")).toBeInTheDocument();
   });
 
   it("renders detail metrics and purchase history", () => {
     render(<ItemDetailPanel history={history} item={detail} />);
 
+    expect(screen.getByRole("region", { name: "가격 요약" })).toHaveClass(
+      "bg-surface-dark",
+      "text-on-dark",
+    );
     expect(screen.getByText("구매 이력")).toBeInTheDocument();
     expect(screen.getAllByText("쿠팡")).toHaveLength(2);
     expect(screen.getByText("+₩2,000")).toBeInTheDocument();

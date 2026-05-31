@@ -1,4 +1,13 @@
 import { EmptyState } from "@/components/empty-state";
+import {
+  TableShell,
+  tableBodyClassName,
+  tableCellClassName,
+  tableClassName,
+  tableHeadClassName,
+  tableHeaderCellClassName,
+  tableNumberCellClassName,
+} from "@/components/ui/data-table";
 import { Panel } from "@/components/ui/panel";
 import { formatKrw } from "@/lib/format";
 import type { ItemSpending, StoreSpending } from "@/lib/reporting/reports";
@@ -16,43 +25,45 @@ function Section({
 export function ReportItemSpendingTable({ items }: { items: ItemSpending[] }) {
   if (items.length === 0) {
     return (
-      <Section title="품목별 누적 지출">
-        <EmptyState message="품목별 지출 데이터가 없습니다." />
+      <Section title="물품별 누적 지출">
+        <EmptyState message="물품별 지출 데이터가 없습니다." />
       </Section>
     );
   }
 
   return (
-    <Section title="품목별 누적 지출">
-      <div className="overflow-x-auto">
-        <table className="min-w-full text-left text-sm">
-          <thead className="border-b border-hairline text-xs uppercase text-muted">
+    <Section title="물품별 누적 지출">
+      <TableShell label="물품별 누적 지출">
+        <table className={tableClassName}>
+          <thead className={tableHeadClassName}>
             <tr>
-              <th className="py-2 pr-4 font-medium">품목</th>
-              <th className="py-2 pr-4 font-medium">카테고리</th>
-              <th className="py-2 pr-4 text-right font-medium">건수</th>
-              <th className="py-2 pr-4 text-right font-medium">누적 지출</th>
+              <th className={tableHeaderCellClassName}>물품</th>
+              <th className={tableHeaderCellClassName}>카테고리</th>
+              <th className={`${tableHeaderCellClassName} text-right`}>건수</th>
+              <th className={`${tableHeaderCellClassName} text-right`}>
+                누적 지출
+              </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-hairline-soft">
+          <tbody className={tableBodyClassName}>
             {items.map((item) => (
-              <tr key={item.itemId}>
-                <td className="py-3 pr-4">
+              <tr className="active:bg-surface-soft" key={item.itemId}>
+                <td className={tableCellClassName}>
                   <p className="font-medium text-ink">{item.itemName}</p>
                   <p className="text-xs text-muted">{item.brand || "-"}</p>
                 </td>
-                <td className="py-3 pr-4 text-body">{item.category}</td>
-                <td className="py-3 pr-4 text-right text-body">
+                <td className={tableCellClassName}>{item.category}</td>
+                <td className={tableNumberCellClassName}>
                   {item.purchaseCount}건
                 </td>
-                <td className="py-3 pr-4 text-right font-medium text-ink">
+                <td className={tableNumberCellClassName}>
                   {formatKrw(item.amount)}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-      </div>
+      </TableShell>
     </Section>
   );
 }
@@ -72,32 +83,32 @@ export function ReportStoreSpendingTable({
 
   return (
     <Section title="매장별 구매액">
-      <div className="overflow-x-auto">
-        <table className="min-w-full text-left text-sm">
-          <thead className="border-b border-hairline text-xs uppercase text-muted">
+      <TableShell label="매장별 구매액">
+        <table className={tableClassName}>
+          <thead className={tableHeadClassName}>
             <tr>
-              <th className="py-2 pr-4 font-medium">매장</th>
-              <th className="py-2 pr-4 text-right font-medium">건수</th>
-              <th className="py-2 pr-4 text-right font-medium">구매액</th>
+              <th className={tableHeaderCellClassName}>매장</th>
+              <th className={`${tableHeaderCellClassName} text-right`}>건수</th>
+              <th className={`${tableHeaderCellClassName} text-right`}>구매액</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-hairline-soft">
+          <tbody className={tableBodyClassName}>
             {stores.map((store) => (
-              <tr key={store.storeName}>
-                <td className="py-3 pr-4 font-medium text-ink">
+              <tr className="active:bg-surface-soft" key={store.storeName}>
+                <td className={`${tableCellClassName} font-medium text-ink`}>
                   {store.storeName}
                 </td>
-                <td className="py-3 pr-4 text-right text-body">
+                <td className={tableNumberCellClassName}>
                   {store.purchaseCount}건
                 </td>
-                <td className="py-3 pr-4 text-right font-medium text-ink">
+                <td className={tableNumberCellClassName}>
                   {formatKrw(store.amount)}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-      </div>
+      </TableShell>
     </Section>
   );
 }
